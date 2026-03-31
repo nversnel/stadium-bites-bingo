@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>Stadium Bites Bingo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -72,7 +71,6 @@
     }
   </style>
 </head>
-
 <body>
 
 <h1>Stadium Bites Bingo</h1>
@@ -136,12 +134,15 @@ function checkBingo() {
     [0,6,12,18,24],[4,8,12,16,20]
   ];
 
+  let bingoFound = false;
   for (let pattern of winPatterns) {
     if (pattern.every(i => squares[i].classList.contains("active"))) {
-      document.getElementById("bingoMessage").style.display = "block";
-      return;
+      bingoFound = true;
+      break;
     }
   }
+
+  document.getElementById("bingoMessage").style.display = bingoFound ? "block" : "none";
 }
 
 function resetBoard() {
