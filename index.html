@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stadium Bites Bingo</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0c2340;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-bottom: 8px;
+      font-size: 2rem;
+    }
+
+    p {
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      max-width: 700px;
+      margin: 0 auto 20px;
+    }
+
+    .cell {
+      background: white;
+      color: #0c2340;
+      border: 2px solid #d9d9d9;
+      border-radius: 10px;
+      min-height: 85px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .cell.checked {
+      background: #2e8b57;
+      color: white;
+      border-color: #2e8b57;
+    }
+
+    .cell.free {
+      background: #f4c542;
+      color: #0c2340;
+      border-color: #f4c542;
+    }
+
+    button {
+      background: #e63946;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    #message {
+      margin-top: 20px;
+      font-size: 22px;
+      font-weight: bold;
+      color: #f4c542;
+      display: none;
+    }
+
+    @media (max-width: 600px) {
+      .cell {
+        min-height: 70px;
+        font-size: 12px;
+        padding: 6px;
+      }
+
+      h1 {
+        font-size: 1.6rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Stadium Bites Bingo</h1>
+  <p>Tap each item as you purchase it.</p>
+
+  <div class="board" id="board"></div>
+
+  <button onclick="resetBoard()">Reset Card</button>
+
+  <div id="message">BINGO! Show this screen to redeem your prize.</div>
+
+  <script>
+    const items = [
+      "Nathan's Hot Dog",
+      "Cracker Jack",
+      "Soft Pretzel",
+      "Helmet Ice Cream",
+      "Lobel's Steak Sandwich",
+      "Garlic Fries",
+      "Chicken Bucket",
+      "Popcorn",
+      "Peanuts",
+      "Italian Sausage",
+      "Soda Souvenir Cup",
+      "Nachos",
+      "Cotton Candy",
+      "Churro",
+      "Pizza Slice",
+      "Cheeseburger",
+      "Funnel Cake",
+      "BBQ Sandwich",
+      "Lemonade",
+      "Mozzarella Sticks",
+      "Onion Rings",
+      "Tacos",
+      "Fried Oreos",
+      "Burger & Fries"
+    ];
+
+    const board = document.getElementById("board");
+    const message = document.getElementById("message");
+    let cells = [];
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function createBoard() {
+      board.innerHTML = "";
+      cells = [];
+      message.style.display = "none";
+
+      const shuffled = shuffle([...items]);
+      let itemIndex = 0;
+
+      for (let i = 0; i < 25; i++) {
+        const cell = document.createElement("div");
+        cell.classList.add("cell");
+
+        if (i === 12) {
+          cell.textContent = "FREE SPACE";
+          cell.classList.add("free", "checked");
+        } else {
+          cell.textContent = shuffled[itemIndex];
+          itemIndex++;
+          cell.addEventListener("click", () => {
+            cell.classList.toggle("checked");
+            checkBingo();
+          });
+        }
+
+        board.appendChild(cell);
+        cells.push(cell);
+      }
+    }
+
+    function checkBingo() {
+      const patterns = [
+        [0,1,2,3,4],
+        [5,6,7,8,9],
+        [10,11,12,13,14],
+        [15,16,17,18,19],
+        [20,21,22,23,24],
+        [0,5,10,15,20],
+        [1,6,11,16,21],
+        [2,7,12,17,22],
+        [3,8,13,18,23],
+        [4,9,14,19,24],
+        [0,6,12,18,24],
+        [4,8,12,16,20]
+      ];
+
+      const hasBingo = patterns.some(pattern =>
+        pattern.every(index => cells[index].classList.contains("checked"))
+      );
+
+      message.style.display = hasBingo ? "block" : "none";
+    }
+
+    function resetBoard() {
+      createBoard();
+    }
+
+    createBoard();
+  </script>
+</body>
+</html>
